@@ -1,8 +1,8 @@
-const Pet = () => {
+const Pet = (props) => {
   return React.createElement("div", {}, [
-    React.createElement("h2", {}, "Luna"),
-    React.createElement("h2", {}, "Dog"),
-    React.createElement("h3", {}, "Big-Schnauzer"),
+    React.createElement("h2", {}, props.name),
+    React.createElement("h2", {}, props.animal),
+    React.createElement("h3", {}, props.breed),
   ])
 }
 
