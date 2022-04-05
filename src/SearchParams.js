@@ -1,12 +1,28 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import Pet from "./Pet";
 
 const ANIMALS = Object.freeze(["bird", "cat", "dog", "rabbit", "reptile"]); // ensure it never gets modified, so we do not have any duplicates.
 
 const SearchParams = () => {
-  const [location, setLocation] = useState("Seattle, WA");
+  const [location, setLocation] = useState("");
   const [animal, setAnimal] = useState("");
   const [breed, setBreed] = useState("");
+  const [pets, setPets] = useState([]); // all the pets that we got back from an API.
   const breeds = []; // grab it from an API.
+
+  useEffect(() => {
+    requestPets();
+  }, []); //eslint-disable-line react-hooks/exhaustive-deps
+
+  // Function is created inside render, the reason being is that now we have a closure where we can reference variable's inside the component
+  async function requestPets() {
+    const res = await fetch(
+      `http://pets-v2.dev-apis.com/pets?animal=${animal}&location=${location}&breed=${breed}`
+    );
+
+    const json = await res.json(); //data normalization
+    setPets(json.pets);
+  }
 
   return (
     <div className="search-params">
@@ -16,6 +32,7 @@ const SearchParams = () => {
           <input
             id="location"
             onChange={(e) => setLocation(e.target.value)}
+            onBlur={(e) => setLocation(e.target.value)}
             value={location}
             type="text"
             placeholder="Location"
@@ -27,6 +44,7 @@ const SearchParams = () => {
             name="animal"
             id="animal"
             value={animal}
+            onChange={(e) => setAnimal(e.target.value)}
             onBlur={(e) => setAnimal(e.target.value)}
           >
             {ANIMALS.map((animal) => (
@@ -43,7 +61,8 @@ const SearchParams = () => {
             name="breed"
             id="breed"
             value={breed}
-            onBlur={(e) => setAnimal(e.target.value)}
+            onChange={(e) => setBreed(e.target.value)}
+            onBlur={(e) => setBreed(e.target.value)}
           >
             {breeds.map((breed) => (
               <option value={breed} key={breed}>
@@ -55,6 +74,9 @@ const SearchParams = () => {
 
         <button>Submit</button>
       </form>
+      {pets.map((pet) => (
+        <Pet name={pet.name} animal={animal} breed={breed} key={pet.id} />
+      ))}
     </div>
   );
 };
