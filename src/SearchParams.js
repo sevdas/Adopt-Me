@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import useBreedlist from "./useBreedList";
-import Pet from "./Pet";
+import Results from "./Results";
 
 const ANIMALS = Object.freeze(["bird", "cat", "dog", "rabbit", "reptile"]); // ensure it never gets modified, so we do not have any duplicates.
 
@@ -12,7 +12,7 @@ const SearchParams = () => {
   const [breeds] = useBreedlist(animal); // grab it from an API.
 
   useEffect(() => {
-    requestPets();
+    requestPets().catch(console.error);
   }, []); //eslint-disable-line react-hooks/exhaustive-deps
 
   // Function is created inside render, the reason being is that now we have a closure where we can reference variable's inside the component
@@ -27,7 +27,13 @@ const SearchParams = () => {
 
   return (
     <div className="search-params">
-      <form action="">
+      <form
+        action=""
+        onSubmit={(e) => {
+          e.preventDefault();
+          requestPets();
+        }}
+      >
         <label htmlFor="location">
           Location
           <input
@@ -76,9 +82,7 @@ const SearchParams = () => {
         </label>
         <button>Submit</button>
       </form>
-      {pets.map((pet) => (
-        <Pet name={pet.name} animal={animal} breed={breed} key={pet.id} />
-      ))}
+      <Results pets={pets} />
     </div>
   );
 };
