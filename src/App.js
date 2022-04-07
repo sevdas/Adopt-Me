@@ -1,16 +1,24 @@
 import { StrictMode } from "react";
 import ReactDOM from "react-dom";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import Pet from "./Pet";
 import SearchParams from "./SearchParams";
+import Details from "./Details";
 
 const App = () => {
   return (
     <div>
       <h1>Adopt Me!</h1>
-      <SearchParams />
-      <Pet name="Luna" animal="Dog" breed="Big-Schnauzer" />
-      <Pet name="Pepper" animal="Bird" breed="Cockatiel" />
-      <Pet name="Sudo" animal="Dog" breed="Wheaten Terrier" />
+      <Router>
+        <Switch>
+          <Route path="/details/:id">
+            <Details />
+          </Route>
+          <Route path="/">
+            <SearchParams />
+          </Route>
+        </Switch>
+      </Router>
     </div>
   );
 };
