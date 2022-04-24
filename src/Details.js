@@ -2,15 +2,15 @@ import { Component } from "react";
 import { withRouter } from "react-router";
 
 class Details extends Component {
-  constructor() {
-    super();
-
-    this.state = { loading: true };
-  }
+  state = { loading: true };
 
   async componentDidMount() {
+    // debugger;
     const res = await fetch(
-      `http://pets-v2.dev-apis.com/pets?id=${this.props.match.params.id}`
+      `http://pets-v2.dev-apis.com/pets?id=${this.props.match.params.id.slice(
+        0,
+        1
+      )}`
     );
     const json = await res.json(); // data normalization
     this.setState(
@@ -23,7 +23,12 @@ class Details extends Component {
     );
   }
   render() {
+    if (this.state.loading) {
+      return <h2>Loading ...</h2>;
+    }
+
     const { animal, breed, city, state, description, name } = this.state;
+    console.log("animal", animal);
     return (
       <div className="details">
         <div>

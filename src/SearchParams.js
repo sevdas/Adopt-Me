@@ -11,6 +11,7 @@ const SearchParams = () => {
   const [pets, setPets] = useState([]); // all the pets that we got back from an API.
   const [breeds] = useBreedlist(animal); // grab it from an API.
 
+  // ComponentDidMount lifecycle method
   useEffect(() => {
     requestPets().catch(console.error);
   }, []); //eslint-disable-line react-hooks/exhaustive-deps
